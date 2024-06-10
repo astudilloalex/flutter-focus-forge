@@ -1,15 +1,18 @@
 import 'package:focus_forge/src/auth/domain/i_auth_repository.dart';
 import 'package:focus_forge/src/common/domain/custom_http_exception.dart';
 import 'package:focus_forge/src/common/domain/default_response.dart';
+import 'package:focus_forge/src/user/domain/i_user_repository.dart';
 import 'package:focus_forge/src/user/domain/user.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   const AuthService(
     this._repository,
+    this._userRepository,
   );
 
   final IAuthRepository _repository;
+  final IUserRepository _userRepository;
 
   Future<bool> get isLoggedIn async {
     final DefaultResponse response = await _repository.currentUser;
@@ -37,7 +40,8 @@ class AuthService {
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
 
-    final DefaultResponse response = await _repository.signInWithGoogle(
+    // Sign in with Google.
+    DefaultResponse response = await _repository.signInWithGoogle(
       googleAuth?.accessToken,
       googleAuth?.idToken,
     );
@@ -47,6 +51,12 @@ class AuthService {
         message: response.message,
       );
     }
-    return User.fromJson(response.data as Map<String, dynamic>);
+    final User user = User.fromJson(response.data as Map<String, dynamic>);
+    response = await _userRepository.saveOrUpdate(user);
+    return user;
+  }
+
+  Future<void> signOut() {
+    return _repository.signOut();
   }
 }

@@ -2,11 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:focus_forge/src/auth/domain/i_auth_repository.dart';
 import 'package:focus_forge/src/common/domain/default_response.dart';
 import 'package:focus_forge/src/user/domain/user.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthRepository implements IAuthRepository {
-  const FirebaseAuthRepository(this._client);
+  const FirebaseAuthRepository(
+    this._client,
+    this._googleSignIn,
+  );
 
   final FirebaseAuth _client;
+  final GoogleSignIn _googleSignIn;
 
   @override
   // TODO: implement authStateChanges
@@ -80,7 +85,10 @@ class FirebaseAuthRepository implements IAuthRepository {
   }
 
   @override
-  Future<void> signOut() {
+  Future<void> signOut() async {
+    try {
+      await _googleSignIn.signOut();
+    } finally {}
     return _client.signOut();
   }
 }

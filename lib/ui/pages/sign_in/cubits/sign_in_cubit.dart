@@ -25,4 +25,8 @@ class SignInCubit extends Cubit<SignInState> {
     }
     return null;
   }
+
+  Future<void> signOut() {
+    return authService.signOut();
+  }
 }

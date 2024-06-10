@@ -52,8 +52,10 @@ class SignInPage extends StatelessWidget {
       } else {
         context.goNamed(RouteName.home);
       }
+    } on Exception {
+      await cubit.signOut();
     } finally {
-      context.loaderOverlay.hide();
+      if (context.mounted) context.loaderOverlay.hide();
     }
   }
 }
