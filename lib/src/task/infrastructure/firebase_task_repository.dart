@@ -73,6 +73,21 @@ class FirebaseTaskRepository implements ITaskRepository {
   }
 
   @override
+  Future<DefaultResponse> findByCode(String userCode, String code) async {
+    final DocumentSnapshot<Map<String, dynamic>> document = await _firestore
+        .collection('users')
+        .doc(userCode)
+        .collection('tasks')
+        .doc(code)
+        .get();
+    return DefaultResponse(
+      message: 'successful',
+      statusCode: 200,
+      data: document.exists ? document.data() : null,
+    );
+  }
+
+  @override
   Future<DefaultResponse> save(Task task) async {
     await _firestore
         .collection('users')

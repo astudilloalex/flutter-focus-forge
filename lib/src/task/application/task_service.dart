@@ -36,9 +36,37 @@ class TaskService {
       lastTask: lastTask,
       limit: limit,
     );
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
     return (response.data as List<dynamic>)
         .map((json) => Task.fromJson(json as Map<String, dynamic>))
         .toList();
+  }
+
+  Future<Task?> getByCode(String code) async {
+    DefaultResponse response = await _authRepository.currentUser;
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
+    final User? user = response.data == null
+        ? null
+        : User.fromJson(response.data as Map<String, dynamic>);
+    response = await _repository.findByCode(user?.code ?? '', code);
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
+    if (response.data == null) return null;
+    return Task.fromJson(response.data as Map<String, dynamic>);
   }
 
   Future<Task> create(Task task) async {
@@ -55,6 +83,12 @@ class TaskService {
     response = await _repository.save(
       task.copyWith(code: generateRandomCode(), userCode: user?.code ?? ''),
     );
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
     return Task.fromJson(response.data as Map<String, dynamic>);
   }
 
@@ -72,6 +106,12 @@ class TaskService {
     response = await _repository.update(
       task.copyWith(userCode: user?.code ?? ''),
     );
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
     return Task.fromJson(response.data as Map<String, dynamic>);
   }
 }

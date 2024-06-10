@@ -11,6 +11,8 @@ abstract class ITaskRepository {
     int limit = 25,
   });
 
+  Future<DefaultResponse> findByCode(String userCode, String code);
+
   Future<DefaultResponse> save(Task task);
 
   Future<DefaultResponse> update(Task task);
