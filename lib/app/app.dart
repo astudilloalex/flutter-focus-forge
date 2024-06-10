@@ -32,7 +32,10 @@ void showSuccessfulSnackbar(
 
 String messageFromCode(String code, BuildContext context) {
   final AppLocalizations localizations = AppLocalizations.of(context)!;
-  final Map<String, String> errorMessages = {};
+  final Map<String, String> errorMessages = {
+    'wrong-password': localizations.wrongPassword,
+    'invalid-name': localizations.invalidName,
+  };
   return errorMessages[code] ?? code;
 }
 

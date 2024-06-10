@@ -1,4 +1,12 @@
 {
+    "cancel": "Cancel",
+    "close": "Close",
     "continueWithGoogle": "Continue with Google",
-    "task": "Task"
+    "description": "Description",
+    "invalidName": "Invalid name",
+    "name": "Name",
+    "save": "Save",
+    "task": "Task",
+    "update": "Update",
+    "wrongPassword": "Wrong password"
 }
