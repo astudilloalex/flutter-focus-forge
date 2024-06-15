@@ -56,6 +56,19 @@ class AuthService {
     return user;
   }
 
+  Future<User?> get currentUser async {
+    final DefaultResponse response = await _repository.currentUser;
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
+    return response.data == null
+        ? null
+        : User.fromJson(response.data as Map<String, dynamic>);
+  }
+
   Future<void> signOut() {
     return _repository.signOut();
   }

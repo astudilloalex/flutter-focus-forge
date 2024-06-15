@@ -14,6 +14,7 @@ class AddEditTaskForm extends StatelessWidget {
       key: cubit.formKey,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       child: ListView(
+        shrinkWrap: true,
         children: [
           const SizedBox(height: 8.0),
           Padding(
@@ -42,7 +43,6 @@ class AddEditTaskForm extends StatelessWidget {
               maxLines: 4,
             ),
           ),
-          const SizedBox(height: 8.0),
         ],
       ),
     );

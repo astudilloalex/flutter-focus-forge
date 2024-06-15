@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:focus_forge/app/app.dart';
+import 'package:focus_forge/app/cubits/app_cubit.dart';
 import 'package:focus_forge/ui/pages/sign_in/cubits/sign_in_cubit.dart';
 import 'package:focus_forge/ui/routes/route_name.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,7 +47,9 @@ class SignInPage extends StatelessWidget {
     try {
       final String? error = await cubit.signInWithGoogle();
       if (!context.mounted) return;
-      context.loaderOverlay.hide();
+      if (cubit.state.user != null) {
+        context.read<AppCubit>().setUser(cubit.state.user!);
+      }
       if (error != null) {
         showErrorSnackbar(context, error);
       } else {

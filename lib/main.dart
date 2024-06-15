@@ -6,6 +6,8 @@ import 'package:focus_forge/app/cubits/app_cubit.dart';
 import 'package:focus_forge/app/services/get_it_service.dart';
 import 'package:focus_forge/app/states/app_state.dart';
 import 'package:focus_forge/firebase_options.dart';
+import 'package:focus_forge/src/auth/application/auth_service.dart';
+import 'package:focus_forge/src/user/application/user_service.dart';
 import 'package:focus_forge/ui/routes/route_page.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -17,7 +19,10 @@ Future<void> main() async {
     MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AppCubit()..load(),
+          create: (context) => AppCubit(
+            userService: getIt<UserService>(),
+            authService: getIt<AuthService>(),
+          )..load(),
         ),
       ],
       child: MyApp(

@@ -1,10 +1,13 @@
 {
     "cancel": "Cancel",
     "close": "Close",
+    "completed": "Completed",
     "continueWithGoogle": "Continue with Google",
+    "delete": "Delete",
     "description": "Description",
     "invalidName": "Invalid name",
     "name": "Name",
+    "pending": "Pending",
     "save": "Save",
     "task": "Task",
     "update": "Update",

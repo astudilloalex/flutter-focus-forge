@@ -43,14 +43,14 @@ class FirebaseTaskRepository implements ITaskRepository {
             .toList(),
       );
     }
-    data = isDone == null
+    data = isDone != null
         ? await _firestore
             .collection('users')
             .doc(userCode)
             .collection('tasks')
             .orderBy('updateDate')
             .where('isDone', isEqualTo: isDone)
-            .startAfter([lastTask.updateDate])
+            .startAfter([lastTask.updateDate.toIso8601String()])
             .limit(limit)
             .get()
         : await _firestore
@@ -58,7 +58,7 @@ class FirebaseTaskRepository implements ITaskRepository {
             .doc(userCode)
             .collection('tasks')
             .orderBy('updateDate')
-            .startAfter([lastTask.updateDate])
+            .startAfter([lastTask.updateDate.toIso8601String()])
             .limit(limit)
             .get();
     return DefaultResponse(

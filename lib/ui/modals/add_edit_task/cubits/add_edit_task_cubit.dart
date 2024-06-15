@@ -45,16 +45,20 @@ class AddEditTaskCubit extends Cubit<AddEditTaskState> {
   }
 
   Future<void> saveOrUpdate() async {
+    if (!formKey.currentState!.validate()) return;
     String error = '';
     Task? savedTask;
     try {
+      emit(state.copyWith(loading: true));
       savedTask = code == null
           ? await taskService.create(
               Task(
                 name: nameController.text.trim(),
                 creationDate: DateTime.now(),
                 updateDate: DateTime.now(),
-                description: descriptionController.text.trim(),
+                description: descriptionController.text.trim().isEmpty
+                    ? null
+                    : descriptionController.text.trim(),
               ),
             )
           : await taskService.update(
@@ -64,7 +68,9 @@ class AddEditTaskCubit extends Cubit<AddEditTaskState> {
                 updateDate: DateTime.now(),
                 code: code ?? '',
                 completedDate: state.task?.completedDate,
-                description: descriptionController.text.trim(),
+                description: descriptionController.text.trim().isEmpty
+                    ? null
+                    : descriptionController.text.trim(),
                 isDone: state.task?.isDone ?? false,
               ),
             );
