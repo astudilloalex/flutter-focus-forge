@@ -15,6 +15,27 @@ class TaskService {
   final ITaskRepository _repository;
   final IAuthRepository _authRepository;
 
+  Future<int> delete(String code) async {
+    DefaultResponse response = await _authRepository.currentUser;
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
+    final User? user = response.data == null
+        ? null
+        : User.fromJson(response.data as Map<String, dynamic>);
+    response = await _repository.delete(user?.code ?? '', code);
+    if (response.statusCode != 200) {
+      throw CustomHttpException(
+        code: response.statusCode,
+        message: response.message,
+      );
+    }
+    return response.data as int;
+  }
+
   Future<List<Task>> getAll({
     bool? isDone,
     Task? lastTask,

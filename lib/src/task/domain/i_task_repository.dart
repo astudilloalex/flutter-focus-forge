@@ -4,6 +4,8 @@ import 'package:focus_forge/src/task/domain/task.dart';
 abstract class ITaskRepository {
   const ITaskRepository();
 
+  Future<DefaultResponse> delete(String userCode, String code);
+
   Future<DefaultResponse> findAll(
     String userCode, {
     bool? isDone,

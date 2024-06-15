@@ -82,6 +82,23 @@ class TaskListCubit extends Cubit<TaskListState> {
     );
   }
 
+  Future<void> deleteTask(Task task) async {
+    final int index = state.tasks.lastIndexWhere(
+      (element) => element.code == task.code,
+    );
+    if (index < 0) return;
+    await taskService.delete(task.code);
+    final List<Task> tasks = [...state.tasks];
+    tasks.removeAt(index);
+    emit(
+      state.copyWith(
+        tasks: [...tasks],
+        lastTask:
+            tasks.lastOrNull == null ? Nullable(null) : Nullable(tasks.last),
+      ),
+    );
+  }
+
   void changeIsDone(
     bool? isDone,
   ) {

@@ -9,6 +9,21 @@ class FirebaseTaskRepository implements ITaskRepository {
   final FirebaseFirestore _firestore;
 
   @override
+  Future<DefaultResponse> delete(String userCode, String code) async {
+    await _firestore
+        .collection('users')
+        .doc(userCode)
+        .collection('tasks')
+        .doc(code)
+        .delete();
+    return const DefaultResponse(
+      message: 'successful',
+      statusCode: 200,
+      data: 1,
+    );
+  }
+
+  @override
   Future<DefaultResponse> findAll(
     String userCode, {
     bool? isDone,
