@@ -28,8 +28,12 @@ class AddEditTaskCubit extends Cubit<AddEditTaskState> {
 
   Future<void> load() async {
     String error = '';
+    Task? task;
     try {
       emit(state.copyWith(loading: true));
+      if (code != null) task = await taskService.getByCode(code!);
+      nameController.text = task?.name ?? '';
+      descriptionController.text = task?.description ?? '';
     } on CustomHttpException catch (e) {
       error = e.message;
     } on Exception catch (e) {

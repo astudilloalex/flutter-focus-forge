@@ -41,6 +41,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       bottom: TabBar(
+        physics: const NeverScrollableScrollPhysics(),
         onTap: (value) {
           final TaskListCubit cubit = context.read<TaskListCubit>();
           if (value == 0) cubit.changeIsDone(false);

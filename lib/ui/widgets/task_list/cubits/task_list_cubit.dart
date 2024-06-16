@@ -9,10 +9,10 @@ import 'package:focus_forge/ui/widgets/task_list/states/task_list_state.dart';
 class TaskListCubit extends Cubit<TaskListState> {
   TaskListCubit({
     required this.taskService,
-  }) : super(const TaskListState());
+  }) : super(const TaskListState(isDone: false));
 
   final TaskService taskService;
-  final int pageLimit = 25;
+  final int pageLimit = 1500;
   final ScrollController scrollController = ScrollController();
 
   @override
@@ -47,7 +47,6 @@ class TaskListCubit extends Cubit<TaskListState> {
     try {
       final List<Task> findedTasks = await taskService.getAll(
         isDone: state.isDone,
-        lastTask: state.lastTask,
         limit: pageLimit,
       );
       tasks.addAll(findedTasks);
@@ -61,8 +60,6 @@ class TaskListCubit extends Cubit<TaskListState> {
           loading: false,
           error: error,
           tasks: tasks.toSet().toList(),
-          lastTask:
-              tasks.lastOrNull == null ? Nullable(null) : Nullable(tasks.last),
         ),
       );
     }
@@ -80,6 +77,25 @@ class TaskListCubit extends Cubit<TaskListState> {
         lastTask: lastTask == null ? Nullable(null) : Nullable(lastTask),
       ),
     );
+  }
+
+  Future<void> updateTask(Task task) async {
+    final List<Task> tasks = [...state.tasks];
+    final int index = tasks.indexWhere(
+      (element) => element.code == task.code,
+    );
+    if (index < 0) return;
+    try {
+      emit(state.copyWith(loading: true, tasks: []));
+      await taskService.update(task);
+      await _fetchTasks();
+    } finally {
+      emit(
+        state.copyWith(
+          loading: false,
+        ),
+      );
+    }
   }
 
   Future<void> deleteTask(Task task) async {
